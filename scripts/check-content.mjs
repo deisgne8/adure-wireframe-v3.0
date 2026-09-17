@@ -58,6 +58,9 @@ for (const copy of approvedCopy) assert.ok(html.includes(copy), `Missing approve
 
 const aboutCopy = [
   'More than a broker. More than a property manager.',
+  'Message from our CEO',
+  'Real estate creates lasting value when every stage of the asset journey is connected.',
+  'Rashed Aldhaheri',
   'Management Is Where Our Experience Runs Deepest.',
   'Residential Communities',
   'Office Towers',
