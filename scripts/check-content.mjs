@@ -91,6 +91,23 @@ const propertyListingCopy = [
   'No properties match these filters.',
 ];
 for (const copy of propertyListingCopy) assert.ok(html.includes(copy), `Missing Property Listing copy: ${copy}`);
+const propertyDetailCopy = [
+  'Two-Bedroom Sea-View Apartment',
+  'AED 280,000',
+  'A considered home with a clear sea view.',
+  '246.97 m²',
+  'Vacant / Available',
+  'Amenities &amp; facilities',
+  'Qaryat Al Hidd · Saadiyat Island',
+  'Explore Sunrise Residence 2',
+  'Interested in this property?',
+  'Unit 502 · Sunrise Residence 2',
+  'Sunrise Residence 2 · Unit 404',
+  'List your property with ADURE.',
+];
+for (const copy of propertyDetailCopy) assert.ok(html.includes(copy), `Missing Property Detail copy: ${copy}`);
+assert.ok(html.includes('id="detail-enquiry-form"'), 'Property Detail enquiry form must be present');
+assert.ok(html.includes('data-scroll-enquiry'), 'Property Detail booking actions must be present');
 assert.ok(!html.includes('subject to management approval'), 'Internal approval notes must not appear on the website');
 assert.ok(!html.includes('Approved client logos'), 'Internal content placeholders must not appear on the website');
 
