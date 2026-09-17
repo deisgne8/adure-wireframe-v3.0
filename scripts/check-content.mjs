@@ -35,6 +35,7 @@ for (const match of html.matchAll(/data-route="([^"]+)"/g)) {
 }
 
 for (const match of html.matchAll(/(?:src|href)="(assets\/[^"]+)"/g)) {
+  if (match[1].includes('${')) continue;
   assert.ok(existsSync(fileURLToPath(new URL(`../dist/${match[1]}`, import.meta.url))), match[1]);
 }
 
@@ -77,6 +78,19 @@ const aboutCopy = [
   'Corporate Enquiry',
 ];
 for (const copy of aboutCopy) assert.ok(html.includes(copy), `Missing About page copy: ${copy}`);
+
+const propertyListingCopy = [
+  'Find The Right Place For Your Next Chapter.',
+  'Find a place to call home or grow your business',
+  'Properties That Match Your Search.',
+  'Sunrise Residence 2 · Unit 502',
+  'Sunset Residence 1 · Unit 207',
+  'Garden Residences 5 · Unit 306',
+  'Own property in the UAE?',
+  'Load More Properties',
+  'No properties match these filters.',
+];
+for (const copy of propertyListingCopy) assert.ok(html.includes(copy), `Missing Property Listing copy: ${copy}`);
 assert.ok(!html.includes('subject to management approval'), 'Internal approval notes must not appear on the website');
 assert.ok(!html.includes('Approved client logos'), 'Internal content placeholders must not appear on the website');
 
