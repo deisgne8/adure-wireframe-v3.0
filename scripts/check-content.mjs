@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {existsSync, readFileSync} from 'node:fs';
+import {existsSync, readFileSync, readdirSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 
 const distUrl = new URL('../dist/index.html', import.meta.url);
@@ -87,7 +87,9 @@ const propertyListingCopy = [
   'Sunset Residence 1 · Unit 207',
   'Garden Residences 5 · Unit 306',
   'Own property in the UAE?',
-  'Load More Properties',
+  'Project / Community',
+  'Price range (AED)',
+  'Property results pages',
   'No properties match these filters.',
 ];
 for (const copy of propertyListingCopy) assert.ok(html.includes(copy), `Missing Property Listing copy: ${copy}`);
@@ -108,6 +110,29 @@ const propertyDetailCopy = [
 for (const copy of propertyDetailCopy) assert.ok(html.includes(copy), `Missing Property Detail copy: ${copy}`);
 assert.ok(html.includes('id="detail-enquiry-form"'), 'Property Detail enquiry form must be present');
 assert.ok(html.includes('data-scroll-enquiry'), 'Property Detail booking actions must be present');
+const customerPageCopy = [
+  'Trusted Across Sectors.',
+  'Government &amp; Semi-Government',
+  'Private Sector &amp; Corporates',
+  'Across Every Environment.',
+  'Residential Communities',
+  'Commercial Buildings',
+  'Office Towers',
+  'Retail Shops',
+  'Hotels',
+  'Government Buildings',
+  'Mixed-Use Developments',
+  'Our Standard of Care.',
+  'Integrated Expertise',
+  'Operational Accountability',
+  'Financial Transparency',
+  'Technology &amp; Reporting',
+  'Real Estate Needs the Right Team Around It.',
+  'Let’s Create More Value',
+];
+for (const copy of customerPageCopy) assert.ok(html.includes(copy), `Missing Our Customers copy: ${copy}`);
+assert.equal(readdirSync(new URL('../dist/assets/customers/', import.meta.url)).filter(name => name.endsWith('.webp')).length, 54, 'Our Customers page must include all 54 approved organisation logos');
+assert.ok(!html.includes('Approved testimonial text'), 'Unapproved testimonial placeholders must remain unpublished');
 assert.ok(!html.includes('subject to management approval'), 'Internal approval notes must not appear on the website');
 assert.ok(!html.includes('Approved client logos'), 'Internal content placeholders must not appear on the website');
 
@@ -118,9 +143,13 @@ assert.deepEqual(
   'Homepage sitemap section numbering must follow the revised content document',
 );
 assert.doesNotMatch(html, /\brent(?:al|ing|ed|s)?\b/i, 'Use Lease or Leasing instead of Rent terminology');
-assert.ok(html.includes('id="services-dropdown"'), 'Services dropdown must be present');
-assert.ok(html.includes('aria-controls="services-menu"'), 'Services dropdown must expose its menu accessibly');
-assert.equal((html.match(/role="menuitem"/g) || []).length, 5, 'Services dropdown must include five routes');
+const primaryNav = html.match(/<nav class="nav" id="nav"[^>]*>([\s\S]*?)<\/nav>/)?.[1] || '';
+assert.deepEqual(
+  [...primaryNav.matchAll(/<a[^>]*>([^<]+)<\/a>/g)].map(match => match[1]),
+  ['About ADURE', 'Properties', 'Our Customers', 'Contact'],
+  'Primary navigation must contain the four approved items in order',
+);
+assert.ok(!primaryNav.includes('services-dropdown'), 'Primary navigation must not include the former Services dropdown');
 
 assert.equal((html.match(/<section class="page active/g) || []).length, 1, 'One page must be active initially');
 assert.ok(html.includes('<section class="page active home-v2" id="home">'), 'Homepage must be the initial page');
