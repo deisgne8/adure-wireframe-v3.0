@@ -56,6 +56,22 @@ const approvedCopy = [
 ];
 for (const copy of approvedCopy) assert.ok(html.includes(copy), `Missing approved copy: ${copy}`);
 
+const aboutCopy = [
+  'More than a broker. More than a property manager.',
+  'Management Is Where Our Experience Runs Deepest.',
+  'Residential Communities',
+  'Office Towers',
+  'Different goals. One connected platform.',
+  'Owners, landlords &amp; sellers',
+  'Corporate &amp; government',
+  'Find a Property',
+  'Manage Your Property',
+  'Corporate Enquiry',
+];
+for (const copy of aboutCopy) assert.ok(html.includes(copy), `Missing About page copy: ${copy}`);
+assert.ok(!html.includes('subject to management approval'), 'Internal approval notes must not appear on the website');
+assert.ok(!html.includes('Approved client logos'), 'Internal content placeholders must not appear on the website');
+
 assert.ok(!html.includes('A Longer View.'), 'Removed homepage philosophy section must not return');
 assert.deepEqual(
   [...html.slice(html.indexOf('id="home"'), html.indexOf('id="properties"')).matchAll(/section-index">(\d+)/g)].map(match => match[1]),
